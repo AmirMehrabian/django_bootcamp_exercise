@@ -1,0 +1,42 @@
+from concurrent.futures import ThreadPoolExecutor, wait
+import numpy
+
+
+def factor(n, end_point=0):
+   
+    if n <= 1:
+        return 1
+        
+    if n == end_point+1:
+        return end_point+1
+        
+    
+    return n*factor(n-1, end_point)
+
+
+
+
+number, num_thread = tuple(map(int, list(input().split())))
+
+chunk = number//num_thread
+points = list(range(0,chunk*num_thread+1,chunk))
+points[-1] = number
+
+with ThreadPoolExecutor(max_workers=num_thread) as executor:
+    futures = [executor.submit(factor, points[ii], points[ii - 1]) for ii in range(1, len(points))]
+
+
+# for ii in range(1, len(points)):
+#     print(points[ii], points[ii-1])
+#     print(factor(points[ii], points[ii - 1]))
+                         
+# zz =1
+chunks_results = [ii.result() for ii in  futures]
+# print(chunks_results )
+
+# print(factor(points[-1]))
+
+# for ii in futures:
+#     zz *=ii.result()
+# print(zz)
+print(numpy.prod(chunks_results))
