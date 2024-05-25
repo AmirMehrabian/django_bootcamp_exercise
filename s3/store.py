@@ -63,8 +63,22 @@ class Store:
         
         return all_comments
 
+    
     def get_inflation_affected_product_names(self):
-        pass
+        inflated_products = set()
+        for ii in self.products:
+            count = 0
+            for jj in self.products:
+                
+                if ii.name == jj.name:
+                  
+                  count += 1
+                 
+                  if count > 1 :
+                     inflated_products.add(ii.name)
+                
+        return list(inflated_products)
+    
 
     def clean_old_comments(self, date):
         
@@ -78,4 +92,15 @@ class Store:
             prod.comments = new_comments
 
     def get_comments_by_bought_users(self, product):
-        pass
+         
+        
+        comments_by_buyers = list()
+       
+                
+        for comment in  product.comments:
+         
+            for bought_prod in comment.user.bought_products:
+                if bought_prod.name == product.name:
+                     comments_by_buyers.append(comment.text)
+                
+        return comments_by_buyers
